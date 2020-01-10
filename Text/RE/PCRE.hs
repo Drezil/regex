@@ -1,5 +1,5 @@
-{-# LANGUAGE FlexibleContexts               #-}
-{-# LANGUAGE CPP                            #-}
+{-# LANGUAGE CPP              #-}
+{-# LANGUAGE FlexibleContexts #-}
 {-# OPTIONS_GHC -fno-warn-duplicate-exports #-}
 #if __GLASGOW_HASKELL__ >= 800
 {-# OPTIONS_GHC -fno-warn-redundant-constraints #-}
@@ -111,10 +111,10 @@ module Text.RE.PCRE
   , module Text.RE.PCRE.String
   ) where
 
-import           Text.RE.PCRE.ByteString()
-import           Text.RE.PCRE.ByteString.Lazy()
-import           Text.RE.PCRE.Sequence()
-import           Text.RE.PCRE.String()
+import           Text.RE.PCRE.ByteString                ()
+import           Text.RE.PCRE.ByteString.Lazy           ()
+import           Text.RE.PCRE.Sequence                  ()
+import           Text.RE.PCRE.String                    ()
 import           Text.RE.REOptions
 import           Text.RE.Replace
 import           Text.RE.TestBench.Parsers
@@ -122,8 +122,8 @@ import           Text.RE.Tools.IsRegex
 import           Text.RE.ZeInternals
 import           Text.RE.ZeInternals.PCRE
 import           Text.RE.ZeInternals.SearchReplace.PCRE
-import qualified Text.Regex.Base                          as B
-import qualified Text.Regex.PCRE                          as PCRE
+import qualified Text.Regex.Base                        as B
+import qualified Text.Regex.PCRE                        as PCRE
 
 
 -- | find all the matches in the argument text; e.g., to count the number
@@ -179,6 +179,7 @@ import qualified Text.Regex.PCRE                          as PCRE
 (=~~) :: ( Monad m
          , B.RegexContext PCRE.Regex s a
          , B.RegexMaker   PCRE.Regex PCRE.CompOption PCRE.ExecOption s
+         , MonadFail m
          )
       => s
       -> RE

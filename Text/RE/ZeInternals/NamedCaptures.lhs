@@ -9,6 +9,9 @@
 {-# LANGUAGE TemplateHaskell            #-}
 #endif
 
+{-# LANGUAGE FlexibleInstances #-}
+{-# OPTIONS_GHC -Wwarn=orphans #-}
+
 module Text.RE.ZeInternals.NamedCaptures
   ( cp
   , extractNamedCaptures
@@ -35,6 +38,10 @@ import           Text.RE.ZeInternals.Types.CaptureID
 import           Text.RE.ZeInternals.Types.Match
 import           Text.Regex.TDFA
 
+-- #if __GLASGOW_HASKELL__ >= 880
+instance MonadFail (Either String) where
+  fail = Left
+-- #endif
 
 -- | quasi quoter for CaptureID: @[cp|0|]@, @[cp|0|]@, etc.,
 -- indexing captures by classic positional numbers, and @[cp|foo|]@,

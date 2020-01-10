@@ -1,10 +1,10 @@
-{-# LANGUAGE NoImplicitPrelude              #-}
-{-# LANGUAGE MultiParamTypeClasses          #-}
-{-# LANGUAGE FlexibleContexts               #-}
-{-# LANGUAGE FlexibleInstances              #-}
+{-# LANGUAGE FlexibleContexts      #-}
+{-# LANGUAGE FlexibleInstances     #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE NoImplicitPrelude     #-}
 {-# OPTIONS_GHC -fno-warn-orphans           #-}
 {-# OPTIONS_GHC -fno-warn-duplicate-exports #-}
-{-# LANGUAGE CPP                            #-}
+{-# LANGUAGE CPP                   #-}
 #if __GLASGOW_HASKELL__ >= 800
 {-# OPTIONS_GHC -fno-warn-redundant-constraints #-}
 #endif
@@ -84,7 +84,7 @@ module Text.RE.PCRE.Sequence
   , module Text.RE.Tools.IsRegex
   ) where
 
-import qualified Data.Sequence                 as S
+import qualified Data.Sequence                                   as S
 import           Data.Typeable
 import           Prelude.Compat
 import           Text.RE.REOptions
@@ -95,7 +95,7 @@ import           Text.RE.ZeInternals
 import           Text.RE.ZeInternals.PCRE
 import           Text.RE.ZeInternals.SearchReplace.PCRE.Sequence
 import           Text.Regex.Base
-import qualified Text.Regex.PCRE               as PCRE
+import qualified Text.Regex.PCRE                                 as PCRE
 -- NB regex-base instance imports maybe be needed for for some API modules
 
 -- | find all the matches in the argument text; e.g., to count the number
@@ -150,6 +150,7 @@ import qualified Text.Regex.PCRE               as PCRE
          , Functor m
          , Typeable a
          , RegexContext PCRE.Regex (S.Seq Char) a
+         , MonadFail m
          )
       => (S.Seq Char)
       -> RE

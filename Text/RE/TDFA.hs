@@ -1,5 +1,5 @@
-{-# LANGUAGE FlexibleContexts               #-}
-{-# LANGUAGE CPP                            #-}
+{-# LANGUAGE CPP              #-}
+{-# LANGUAGE FlexibleContexts #-}
 {-# OPTIONS_GHC -fno-warn-duplicate-exports #-}
 #if __GLASGOW_HASKELL__ >= 800
 {-# OPTIONS_GHC -fno-warn-redundant-constraints #-}
@@ -115,19 +115,19 @@ module Text.RE.TDFA
 
 import           Text.RE.REOptions
 import           Text.RE.Replace
-import           Text.RE.TDFA.ByteString()
-import           Text.RE.TDFA.ByteString.Lazy()
-import           Text.RE.TDFA.Sequence()
-import           Text.RE.TDFA.String()
-import           Text.RE.TDFA.Text()
-import           Text.RE.TDFA.Text.Lazy()
+import           Text.RE.TDFA.ByteString                ()
+import           Text.RE.TDFA.ByteString.Lazy           ()
+import           Text.RE.TDFA.Sequence                  ()
+import           Text.RE.TDFA.String                    ()
+import           Text.RE.TDFA.Text                      ()
+import           Text.RE.TDFA.Text.Lazy                 ()
 import           Text.RE.TestBench.Parsers
 import           Text.RE.Tools.IsRegex
 import           Text.RE.ZeInternals
 import           Text.RE.ZeInternals.SearchReplace.TDFA
 import           Text.RE.ZeInternals.TDFA
-import qualified Text.Regex.Base                          as B
-import qualified Text.Regex.TDFA                          as TDFA
+import qualified Text.Regex.Base                        as B
+import qualified Text.Regex.TDFA                        as TDFA
 
 
 -- | find all the matches in the argument text; e.g., to count the number
@@ -178,6 +178,7 @@ import qualified Text.Regex.TDFA                          as TDFA
 (=~~) :: ( Monad m
          , B.RegexContext TDFA.Regex s a
          , B.RegexMaker   TDFA.Regex TDFA.CompOption TDFA.ExecOption s
+         , MonadFail m
          )
       => s
       -> RE

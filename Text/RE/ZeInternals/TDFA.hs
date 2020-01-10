@@ -1,16 +1,16 @@
-{-# LANGUAGE NoImplicitPrelude          #-}
-{-# LANGUAGE RecordWildCards            #-}
-{-# LANGUAGE MultiParamTypeClasses      #-}
-{-# LANGUAGE TypeSynonymInstances       #-}
-{-# LANGUAGE FlexibleInstances          #-}
-{-# LANGUAGE FlexibleContexts           #-}
-{-# LANGUAGE CPP                        #-}
+{-# LANGUAGE CPP                   #-}
+{-# LANGUAGE FlexibleContexts      #-}
+{-# LANGUAGE FlexibleInstances     #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE NoImplicitPrelude     #-}
+{-# LANGUAGE RecordWildCards       #-}
+{-# LANGUAGE TypeSynonymInstances  #-}
 #if __GLASGOW_HASKELL__ >= 800
 {-# OPTIONS_GHC -fno-warn-redundant-constraints #-}
-{-# LANGUAGE TemplateHaskellQuotes      #-}
+{-# LANGUAGE TemplateHaskellQuotes #-}
 #else
-{-# LANGUAGE QuasiQuotes                #-}
-{-# LANGUAGE TemplateHaskell            #-}
+{-# LANGUAGE QuasiQuotes           #-}
+{-# LANGUAGE TemplateHaskell       #-}
 #endif
 {-# OPTIONS_GHC -fno-warn-orphans       #-}
 
@@ -169,10 +169,10 @@ unpackSimpleREOptions sro =
       }
 
     (ml,cs) = case sro of
-        MultilineSensitive    -> (,) True  True
-        MultilineInsensitive  -> (,) True  False
-        BlockSensitive        -> (,) False True
-        BlockInsensitive      -> (,) False False
+        MultilineSensitive   -> (,) True  True
+        MultilineInsensitive -> (,) True  False
+        BlockSensitive       -> (,) False True
+        BlockInsensitive     -> (,) False False
 
 
 ------------------------------------------------------------------------
@@ -181,17 +181,17 @@ unpackSimpleREOptions sro =
 
 -- | compile a 'String' into a 'RE' with the default options,
 -- generating an error if the RE is not well formed
-compileRegex :: (Functor m,Monad m) => String -> m RE
+compileRegex :: (Functor m,Monad m, MonadFail m) => String -> m RE
 compileRegex = compileRegexWith minBound
 
 -- | compile a 'String' into a 'RE' using the given @SimpleREOptions@,
 -- generating an error if the RE is not well formed
-compileRegexWith :: (Functor m,Monad m) => SimpleREOptions -> String -> m RE
+compileRegexWith :: (Functor m,Monad m, MonadFail m) => SimpleREOptions -> String -> m RE
 compileRegexWith = compileRegexWithOptions
 
 -- | compile a 'String' into a 'RE' using the given @SimpleREOptions@,
 -- generating an error if the RE is not well formed
-compileRegexWithOptions :: (IsOption o, Functor m, Monad   m)
+compileRegexWithOptions :: (IsOption o, Functor m, Monad   m, MonadFail m)
                         => o
                         -> String
                         -> m RE
@@ -199,7 +199,7 @@ compileRegexWithOptions = compileRegex_ RPM_raw . makeREOptions
 
 -- | compile a 'String' into a 'RE' for q quasi quoter, using the given
 -- @SimpleREOptions@, generating an error if the RE is not well formed
-compileRegexWithOptionsForQQ :: (IsOption o, Functor m, Monad   m)
+compileRegexWithOptionsForQQ :: (IsOption o, Functor m, Monad   m, MonadFail m)
                              => o
                              -> String
                              -> m RE
@@ -212,7 +212,7 @@ compileRegexWithOptionsForQQ = compileRegex_ RPM_qq . makeREOptions
 
 -- | compile a SearchReplace template generating errors if the RE or
 -- the template are not well formed, all capture references being checked
-compileSearchReplace :: (Monad m,Functor m,IsRegex RE s)
+compileSearchReplace :: (Monad m,Functor m,IsRegex RE s, MonadFail m)
                      => String
                      -> String
                      -> m (SearchReplace RE s)
@@ -221,7 +221,7 @@ compileSearchReplace = compileSearchReplaceWith minBound
 -- | compile a SearchReplace template, with simple options, generating
 -- errors if the RE or the template are not well formed, all capture
 -- references being checked
-compileSearchReplaceWith :: (Monad m,Functor m,IsRegex RE s)
+compileSearchReplaceWith :: (Monad m,Functor m,IsRegex RE s, MonadFail m)
                          => SimpleREOptions
                          -> String
                          -> String
@@ -231,7 +231,7 @@ compileSearchReplaceWith sro = compileSearchAndReplace_ packR $ compileRegexWith
 -- | compile a SearchReplace template, with general options, generating
 -- errors if the RE or the template are not well formed, all capture
 -- references being checked
-compileSearchReplaceWithOptions :: (Monad m,Functor m,IsRegex RE s)
+compileSearchReplaceWithOptions :: (Monad m,Functor m,IsRegex RE s, MonadFail m)
                                 => REOptions
                                 -> String
                                 -> String
@@ -249,14 +249,14 @@ compileSearchReplaceWithOptions os = compileSearchAndReplace_ packR $ compileReg
 --
 --  @maybe undefined id . escape ((\"^\"++) . (++\"$\"))@
 --
-escape :: (Functor m,Monad m)
+escape :: (Functor m,Monad m, MonadFail m)
        => (String->String)
        -> String
        -> m RE
 escape = escapeWith minBound
 
 -- | a variant of 'escape' where the 'SimpleREOptions' are specified
-escapeWith :: (Functor m,Monad m)
+escapeWith :: (Functor m,Monad m, MonadFail m)
            => SimpleREOptions
            -> (String->String)
            -> String
@@ -265,7 +265,7 @@ escapeWith = escapeWithOptions
 
 -- | a variant of 'escapeWith' that allows an 'IsOption' RE option
 -- to be specified
-escapeWithOptions :: ( IsOption o, Functor m, Monad m)
+escapeWithOptions :: ( IsOption o, Functor m, Monad m, MonadFail m)
                   => o
                   -> (String->String)
                   -> String
@@ -407,7 +407,7 @@ unsafeCompileRegex_ rpm os = either oops id . compileRegex_ rpm os
   where
     oops = error . ("unsafeCompileRegex: " ++)
 
-compileRegex_ :: (Functor m,Monad m)
+compileRegex_ :: (Functor m,Monad m, MonadFail m)
               => RegexParseMode
               -> REOptions
               -> String
@@ -422,7 +422,7 @@ compileRegex_ rpm os re_s = uncurry mk <$> compileRegex' rpm os re_s
         , _re_regex   = rx
         }
 
-compileRegex' :: (Functor m,Monad m)
+compileRegex' :: (Functor m,Monad m, MonadFail m)
               => RegexParseMode
               -> REOptions
               -> String
@@ -452,14 +452,14 @@ qq_prep s0 = case s0 of
     backslash s1 = case s1 of
       ""  -> "\\"
       c:s -> case c of
-        'a'  -> '\a'    : qq_prep s
-        'b'  -> '\b'    : qq_prep s
-        'f'  -> '\f'    : qq_prep s
-        'n'  -> '\n'    : qq_prep s
-        'r'  -> '\r'    : qq_prep s
-        't'  -> '\t'    : qq_prep s
-        'v'  -> '\v'    : qq_prep s
-        _    -> '\\': c : qq_prep s
+        'a' -> '\a'    : qq_prep s
+        'b' -> '\b'    : qq_prep s
+        'f' -> '\f'    : qq_prep s
+        'n' -> '\n'    : qq_prep s
+        'r' -> '\r'    : qq_prep s
+        't' -> '\t'    : qq_prep s
+        'v' -> '\v'    : qq_prep s
+        _   -> '\\': c : qq_prep s
 
 
 ------------------------------------------------------------------------

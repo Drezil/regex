@@ -1,10 +1,10 @@
-{-# LANGUAGE NoImplicitPrelude              #-}
-{-# LANGUAGE MultiParamTypeClasses          #-}
-{-# LANGUAGE FlexibleContexts               #-}
-{-# LANGUAGE FlexibleInstances              #-}
+{-# LANGUAGE FlexibleContexts      #-}
+{-# LANGUAGE FlexibleInstances     #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE NoImplicitPrelude     #-}
 {-# OPTIONS_GHC -fno-warn-orphans           #-}
 {-# OPTIONS_GHC -fno-warn-duplicate-exports #-}
-{-# LANGUAGE CPP                            #-}
+{-# LANGUAGE CPP                   #-}
 #if __GLASGOW_HASKELL__ >= 800
 {-# OPTIONS_GHC -fno-warn-redundant-constraints #-}
 #endif
@@ -95,7 +95,7 @@ import           Text.RE.ZeInternals
 import           Text.RE.ZeInternals.SearchReplace.TDFA.String
 import           Text.RE.ZeInternals.TDFA
 import           Text.Regex.Base
-import qualified Text.Regex.TDFA               as TDFA
+import qualified Text.Regex.TDFA                               as TDFA
 -- NB regex-base instance imports maybe be needed for for some API modules
 
 -- | find all the matches in the argument text; e.g., to count the number
@@ -150,6 +150,7 @@ import qualified Text.Regex.TDFA               as TDFA
          , Functor m
          , Typeable a
          , RegexContext TDFA.Regex String a
+         , MonadFail m
          )
       => String
       -> RE

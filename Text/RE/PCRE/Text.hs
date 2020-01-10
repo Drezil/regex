@@ -1,10 +1,10 @@
-{-# LANGUAGE NoImplicitPrelude              #-}
-{-# LANGUAGE MultiParamTypeClasses          #-}
-{-# LANGUAGE FlexibleContexts               #-}
-{-# LANGUAGE FlexibleInstances              #-}
+{-# LANGUAGE FlexibleContexts      #-}
+{-# LANGUAGE FlexibleInstances     #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE NoImplicitPrelude     #-}
 {-# OPTIONS_GHC -fno-warn-orphans           #-}
 {-# OPTIONS_GHC -fno-warn-duplicate-exports #-}
-{-# LANGUAGE CPP                            #-}
+{-# LANGUAGE CPP                   #-}
 #if __GLASGOW_HASKELL__ >= 800
 {-# OPTIONS_GHC -fno-warn-redundant-constraints #-}
 #endif
@@ -84,7 +84,7 @@ module Text.RE.PCRE.Text
   , module Text.RE.Tools.IsRegex
   ) where
 
-import qualified Data.Text                     as T
+import qualified Data.Text                                   as T
 import           Data.Typeable
 import           Prelude.Compat
 import           Text.RE.REOptions
@@ -95,8 +95,8 @@ import           Text.RE.ZeInternals
 import           Text.RE.ZeInternals.PCRE
 import           Text.RE.ZeInternals.SearchReplace.PCRE.Text
 import           Text.Regex.Base
-import qualified Text.Regex.PCRE               as PCRE
-import           Text.Regex.PCRE.Text()
+import qualified Text.Regex.PCRE                             as PCRE
+import           Text.Regex.PCRE.Text                        ()
 
 -- | find all the matches in the argument text; e.g., to count the number
 -- of naturals in s:
@@ -150,6 +150,7 @@ import           Text.Regex.PCRE.Text()
          , Functor m
          , Typeable a
          , RegexContext PCRE.Regex T.Text a
+         , MonadFail m
          )
       => T.Text
       -> RE

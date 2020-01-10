@@ -1,12 +1,12 @@
-{-# LANGUAGE NoImplicitPrelude          #-}
-{-# LANGUAGE RecordWildCards            #-}
-{-# LANGUAGE CPP                        #-}
+{-# LANGUAGE CPP                   #-}
+{-# LANGUAGE NoImplicitPrelude     #-}
+{-# LANGUAGE RecordWildCards       #-}
 #if __GLASGOW_HASKELL__ >= 800
 {-# OPTIONS_GHC -fno-warn-redundant-constraints #-}
-{-# LANGUAGE TemplateHaskellQuotes      #-}
+{-# LANGUAGE TemplateHaskellQuotes #-}
 #else
-{-# LANGUAGE QuasiQuotes                #-}
-{-# LANGUAGE TemplateHaskell            #-}
+{-# LANGUAGE QuasiQuotes           #-}
+{-# LANGUAGE TemplateHaskell       #-}
 #endif
 {-# OPTIONS_GHC -fno-warn-orphans       #-}
 
@@ -16,7 +16,7 @@ module Text.RE.ZeInternals.SearchReplace
   , compileSearchAndReplace_
   ) where
 
-import qualified Data.HashMap.Strict            as HMS
+import qualified Data.HashMap.Strict                     as HMS
 import           Prelude.Compat
 import           Text.RE.ZeInternals.NamedCaptures
 import           Text.RE.ZeInternals.Replace
@@ -24,7 +24,7 @@ import           Text.RE.ZeInternals.Types.Capture
 import           Text.RE.ZeInternals.Types.CaptureID
 import           Text.RE.ZeInternals.Types.Matches
 import           Text.RE.ZeInternals.Types.SearchReplace
-import qualified Text.Regex.TDFA                as TDFA
+import qualified Text.Regex.TDFA                         as TDFA
 
 
 -- | warapper on 'compileSearchReplace_' that will generate an error
@@ -39,7 +39,7 @@ unsafeCompileSearchReplace_ pk cf = either err id . compileSearchReplace_ pk cf
 
 -- | compile a SearchReplace template generating errors if the RE or
 -- the template are not well formed -- all capture references being checked
-compileSearchReplace_ :: (Monad m,Functor m)
+compileSearchReplace_ :: (Monad m,Functor m, MonadFail m)
                       => (String->s)
                       -> (String->Either String re)
                       -> String
@@ -53,7 +53,7 @@ compileSearchReplace_ pack compile_re sr_tpl = either fail return $ do
 
 -- | compile 'SearcgReplace' from two strings containing the RE
 -- and the replacement template
-compileSearchAndReplace_ :: (Monad m,Functor m)
+compileSearchAndReplace_ :: (Monad m,Functor m, MonadFail m)
                          => (String->s)
                          -> (String->Either String re)
                          -> String
